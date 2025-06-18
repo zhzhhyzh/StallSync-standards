@@ -107,7 +107,7 @@ exports.list = async (req, res) => {
       {
         total: count,
         data: newRows,
-        extra: { file: "filename", key: ["filename"] },
+        extra: { file: "filename", key: ["primaryKey"] },
       },
       res
     );
@@ -173,13 +173,13 @@ exports.create = async (req, res) => {
   filename
     .findOne({
       where: {
-        filename: req.body.filename,
+        primaryKey: req.body.primaryKey,
       },
       raw: true,
     })
     .then(async (trnscd) => {
       if (trnscd)
-        return returnError(req, 400, { filename: "RECORDEXISTS" }, res);
+        return returnError(req, 400, { primaryKey: "RECORDEXISTS" }, res);
       else {
         //4. Code Checking
         let ddlErrors = {};
@@ -210,7 +210,7 @@ exports.create = async (req, res) => {
           //5. Creation of record
           filename
             .create({
-              filename: req.body.filename,
+              primaryKey: req.body.primaryKey,
               description: req.body.description,
               localDescription: req.body.localDescription,
               type1: req.body.type1,
@@ -230,10 +230,10 @@ exports.create = async (req, res) => {
                 "filename",
                 null,
                 null,
-                created.filename,
+                created.primaryKey,
                 "A",
                 req.user.psusrunm,
-                "", created.filename);
+                "", created.primaryKey);
 
               //7. Return Success
               return returnSuccessMessage(req, 200, "RECORDCREATED", res);
@@ -264,7 +264,7 @@ exports.update = async (req, res) => {
   await filename
     .findOne({
       where: {
-        filename: id,
+        primaryKey: id,
       },
       raw: true,
       attributes: {
@@ -331,7 +331,7 @@ exports.update = async (req, res) => {
               "filename",
               data,
               await filename.findByPk(data.id, { raw: true }),
-              data.filename,
+              data.primaryKey,
               "C",
               req.user.psusrunm
             );
@@ -355,7 +355,7 @@ exports.delete = async (req, res) => {
   await filename
     .findOne({
       where: {
-        filename: id,
+        primaryKey: id,
       },
       raw: true,
     })
@@ -372,11 +372,11 @@ exports.delete = async (req, res) => {
               "filename",
               null,
               null,
-              trnscd.filename,
+              trnscd.primaryKey,
               "D",
               req.user.psusrunm,
               "",
-              trnscd.filename
+              trnscd.primaryKey
             );
 
             //5. Return result
